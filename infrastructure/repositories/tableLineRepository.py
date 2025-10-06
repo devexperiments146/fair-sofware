@@ -47,3 +47,9 @@ class TableLineRepository:
     tableLineEntities = self.session.query(TableLineEntity).filter_by(id=id).all()
     self.session.delete(tableLineEntities[0])
     self.session.commit()
+
+
+  def deleteAllTableLinesOfRoom(self,room_id):
+    self.session.query(TableLineEntity).filter_by(room_id=room_id).delete()
+    self.session.commit()
+  

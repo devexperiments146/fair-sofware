@@ -359,7 +359,7 @@ class MainWindow(QMainWindow, ):
         self.setCentralWidget(widget)
 
     def displayRooms(self, s):
-        widget = DisplayRoomView(self.store,self.appController)
+        widget = DisplayRoomView(self.store,self.appController,self.roomController)
         self.setCentralWidget(widget)
 
     def displayImportRoom(self,s):

@@ -60,6 +60,6 @@ class TableRepository:
     self.session.commit()
 
   
-  def deleteAllTables(self):
-    self.session.query(TableEntity).delete()
+  def deleteAllTablesOfRoom(self,room_id):
+    self.session.query(TableEntity).filter_by(room_id=room_id).delete()
     self.session.commit()

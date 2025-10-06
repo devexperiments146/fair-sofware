@@ -10,12 +10,12 @@ from model.objects.tableLine import TableLine
 from model.usecases.printPdf import PrintPdf
 
 from infrastructure.repositories.doorRepository import DoorRepository
-from infrastructure.repositories.exponentRepository import ExponentRepository
-from infrastructure.repositories.projectRepository import ProjectRepository
 from infrastructure.repositories.roomRepository import RoomRepository
-from infrastructure.repositories.tableGroupRepository import TableGroupRepository
 from infrastructure.repositories.tableLineRepository import TableLineRepository
 from infrastructure.repositories.tableRepository import TableRepository
+from infrastructure.repositories.zoneRepository import ZoneRepository
+from infrastructure.repositories.unusableSpaceRepository import UnusableSpaceRepository
+from infrastructure.repositories.platformRepository import PlatformRepository
 
 from application.mapper.projectMapper import ProjectMapper
 
@@ -27,6 +27,12 @@ class RoomController:
     self.window = window
     self.store = store
     self.roomRepository = RoomRepository(session,store)
+    self.tableRepository = TableRepository(session)
+    self.doorRepository = DoorRepository(session,store)
+    self.tableLineRepository = TableLineRepository(session)
+    self.zoneRepository = ZoneRepository(session)
+    self.unusableSpaceRepository = UnusableSpaceRepository(session)
+    self.platformRepository = PlatformRepository(session)
 
   def addRoom(self,name,width,height):
     room = Room(0,name,float(width.replace(",",".")),float(height.replace(",",".")),0,0)
@@ -48,4 +54,17 @@ class RoomController:
     print("Salles chargées")
     print(str(len(rooms)))
     self.store.setRooms(rooms)
+
+  def deleteRoom(self,id):
+    self.tableRepository.deleteAllTablesOfRoom(id)
+    self.doorRepository.deleteAllDoorsOfRoom(id)
+    self.tableLineRepository.deleteAllTableLinesOfRoom(id)
+    self.zoneRepository.deleteAllZonesOfRoom(id)
+    self.unusableSpaceRepository.deleteAllUnusableSpacesOfRoom(id)
+    self.platformRepository.deleteAllPlatformsOfRoom(id)
+    rooms = self.roomRepository.deleteRoom(id)
+    
+    rooms = [x for x in self.store.getSelectedProject().rooms if x.id ==id]
+    rooms.remove(rooms[0])
+    self.window.displayDrawer("controller")
 

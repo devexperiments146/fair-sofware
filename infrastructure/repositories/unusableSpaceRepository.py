@@ -32,3 +32,7 @@ class UnusableSpaceRepository:
     UnusableSpaceEntities = self.session.query(UnusableSpaceEntity).filter_by(id=id).all()
     self.session.delete(UnusableSpaceEntities[0])
     self.session.commit()
+
+  def deleteAllUnusableSpacesOfRoom(self,room_id):
+    self.session.query(UnusableSpaceEntity).filter_by(room_id=room_id).delete()
+    self.session.commit()

@@ -47,4 +47,7 @@ class DoorRepository:
     self.session.query(DoorEntity).filter_by(id=door.id).update({"x":door.x,"y":door.y,"reelX":door.reelX,"reelY":door.reelY})
     self.session.commit()
 
+  def deleteAllDoorsOfRoom(self,room_id):
+    self.session.query(DoorEntity).filter_by(room_id=room_id).delete()
+    self.session.commit()
   

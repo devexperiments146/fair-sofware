@@ -86,3 +86,9 @@ class RoomRepository:
         room.unusableSpaces.append(unusableSpace)
       rooms.append(room)
     return rooms
+  
+  def deleteRoom(self,id):
+    roomEntities = self.session.query(RoomEntity).filter_by(id=id).all()
+    self.session.delete(roomEntities[0])
+    self.session.commit()
+  

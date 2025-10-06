@@ -46,3 +46,7 @@ class ZoneRepository:
   def updateZone(self,zone):
     self.session.query(ZoneEntity).filter_by(id=zone.id).update({"name":zone.name,"length":zone.length,"width":zone.width,"x":zone.x,"y":zone.y,"reelX":zone.reelX,"reelY":zone.reelY})
     self.session.commit()
+
+  def deleteAllZonesOfRoom(self,room_id):
+    self.session.query(ZoneEntity).filter_by(room_id=room_id).delete()
+    self.session.commit()

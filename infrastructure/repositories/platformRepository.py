@@ -32,3 +32,7 @@ class PlatformRepository:
     platformEntities = self.session.query(PlatformEntity).filter_by(id=id).all()
     self.session.delete(platformEntities[0])
     self.session.commit()
+
+  def deleteAllPlatformsOfRoom(self,room_id):
+    self.session.query(PlatformEntity).filter_by(room_id=room_id).delete()
+    self.session.commit()
