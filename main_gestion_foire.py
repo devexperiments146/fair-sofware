@@ -48,6 +48,9 @@ from view.exponent.importFileView import ImportFileView
 from view.platform.displayPlatformView import DisplayPlatformView
 from view.platform.createPlatformView import CreatePlatformView
 
+from view.structure.displayStructureView import DisplayStructureView
+from view.structure.createStructureView import CreateStructureView
+
 
 from view.drawer.drawerView import DrawerView
 from view.table.fillTablesView import FillTablesView
@@ -64,6 +67,7 @@ from application.controller.parameterController import ParameterController
 from application.controller.zoneController import ZoneController
 from application.controller.unusableSpaceController import UnusableSpaceController
 from application.controller.platformController import PlatformController
+from application.controller.structureController import StructureController
 
 from application.store.appStore import AppStore
 
@@ -98,6 +102,7 @@ class MainWindow(QMainWindow, ):
         self.zoneController = ZoneController(self,self.store,session)
         self.unusableSpaceController = UnusableSpaceController(self,self.store,session)
         self.platformController = PlatformController(self,self.store,session)
+        self.structureController = StructureController(self,self.store,session)
         
         self.parameterController.loadParameters()
         self.projectController.loadProjects()
@@ -144,7 +149,7 @@ class MainWindow(QMainWindow, ):
         self.room_menu = menu.addMenu("&Salles")
         self.table_menu = menu.addMenu("&Tables")
         self.exponent_menu = menu.addMenu("&Exposants")
-        platform_menu = menu.addMenu("&Estrades")
+        other_menu = menu.addMenu("&Autres")
         display_menu = menu.addMenu("&Affichage")
         help_menu = menu.addMenu("&Aide")
 
@@ -261,8 +266,18 @@ class MainWindow(QMainWindow, ):
         button_action2 = QAction(QIcon("bug.png"), "&Estrades", self)
         button_action2.triggered.connect(self.displayPlatforms)
 
-        platform_menu.addAction(button_action)
-        platform_menu.addAction(button_action2)
+        button_action3 = QAction(QIcon("bug.png"), "&Créer structure", self)
+        button_action3.triggered.connect(self.displayCreateStructure)
+
+        button_action4 = QAction(QIcon("bug.png"), "&Structures", self)
+        button_action4.triggered.connect(self.displayStructures)
+
+
+        other_menu.addAction(button_action)
+        other_menu.addAction(button_action2)
+        self.exponent_menu.addSeparator()
+        other_menu.addAction(button_action3)
+        other_menu.addAction(button_action4)
 
         button_action = QAction(QIcon("bug.png"), "Tables", self)
         button_action.triggered.connect(self.displayDrawerTables)
@@ -355,7 +370,7 @@ class MainWindow(QMainWindow, ):
         self.setCentralWidget(widget)
 
     def displayDrawer(self, s):  
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.setCentralWidget(widget)
 
     def displayRooms(self, s):
@@ -456,12 +471,12 @@ class MainWindow(QMainWindow, ):
         self.setCentralWidget(widget)
 
     def displayPDF(self,s):
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.appController.printPdf(widget.getViews())
 
     def displayExponentPDF(self,exponent):
         self.store.setDisplayExponent(exponent)
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.appController.printPdf(widget.getViews())
         self.store.setDisplayExponent(None)
         self.displayDrawer("view")
@@ -495,37 +510,42 @@ class MainWindow(QMainWindow, ):
 
     def displayDrawerTables(self,s):
         self.store.setDisplayTables(s)
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.setCentralWidget(widget)
 
     def displayDrawerTableLines(self,s):
         self.store.setDisplayTableLines(s)
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.setCentralWidget(widget)
 
     def displayDrawerDoors(self,s):
         self.store.setDisplayDoors(s)
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.setCentralWidget(widget)
 
     def displayDrawerZones(self,s):
         self.store.setDisplayZones(s)
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.setCentralWidget(widget)
 
     def displayDrawerUnusableSpaces(self,s):
         self.store.setDisplayUnusableSpaces(s)
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.setCentralWidget(widget)
     
     def displayDrawerPlatforms(self,s):
         self.store.setDisplayPlatforms(s)
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
+        self.setCentralWidget(widget)
+
+    def displayDrawerStructures(self,s):
+        self.store.setDisplayStructures(s)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.setCentralWidget(widget)
 
     def displayMeasurements(self,s):
         self.store.setDisplayMeasurements(s)
-        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.setCentralWidget(widget)
 
     def displayPlatforms(self, s):
@@ -534,6 +554,14 @@ class MainWindow(QMainWindow, ):
 
     def displayCreatePlatform(self, s):
         widget = CreatePlatformView(self.store,self.appController,self.platformController)
+        self.setCentralWidget(widget)
+
+    def displayStructures(self, s):
+        widget = DisplayStructureView(self.store,self.appController,self.structureController)
+        self.setCentralWidget(widget)           
+
+    def displayCreateStructure(self, s):
+        widget = CreateStructureView(self.store,self.appController,self.structureController)
         self.setCentralWidget(widget)
 
 

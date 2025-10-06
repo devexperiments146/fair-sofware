@@ -45,6 +45,7 @@ class RoomRepository:
       roomId=1
     roomEntity = RoomEntity(self.store.getSelectedProject().id,roomId,room.name,room.x,room.y,room.width,room.length)
     self.session.add(roomEntity)
+    # Unusable space
     maxValue = self.session.query(func.max(UnusableSpaceEntity.id)).scalar()
     if(maxValue):
       newId=int(maxValue)+1
@@ -54,6 +55,7 @@ class RoomRepository:
       unusableSpaceEntity = UnusableSpaceEntity(self.store.getSelectedProject().id,newId,unusableSpace.name,unusableSpace.x,unusableSpace.y,unusableSpace.width,unusableSpace.length,unusableSpace.reelX,unusableSpace.reelY,unusableSpace.orientation,roomId)
       newId = newId + 1
       self.session.add(unusableSpaceEntity)
+    # Door
     maxValue = self.session.query(func.max(DoorEntity.id)).scalar()
     if(maxValue):
       newId=int(maxValue)+1

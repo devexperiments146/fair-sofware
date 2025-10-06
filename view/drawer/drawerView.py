@@ -14,10 +14,11 @@ from view.drawer.groupView import GroupView
 from view.drawer.zoneView import ZoneView
 from view.drawer.unusableSpaceView import UnusableSpaceView 
 from view.drawer.platformView import PlatformView
+from view.drawer.structureView import StructureView
 class Viewport(QGraphicsView):
 
 
-    def __init__(self,parent,store,tableController=None,tableLineController=None,doorController=None,room=None,unusableSpaceController = None,zoneController = None,platformController = None):
+    def __init__(self,parent,store,tableController=None,tableLineController=None,doorController=None,room=None,unusableSpaceController = None,zoneController = None,platformController = None,structureController = None):
         super(Viewport, self).__init__(parent)
         self.tableController = tableController
         self.tableLineController = tableLineController
@@ -25,6 +26,7 @@ class Viewport(QGraphicsView):
         self.zoneController = zoneController
         self.unusableSpaceController = unusableSpaceController
         self.platformController = platformController
+        self.structureController = structureController
         self.displayExponent = store.getDisplayExponent()
 
         multiplier = store.getMultiplier()
@@ -47,6 +49,9 @@ class Viewport(QGraphicsView):
 
         if store.getDisplayPlatforms():
             self.drawPlatforms(room,multiplier)
+
+        if store.getDisplayStructures():
+            self.drawStructures(room,multiplier)
 
         if store.getDisplayZones():
             self.drawZones(room,multiplier,store)
@@ -120,6 +125,12 @@ class Viewport(QGraphicsView):
         platforms = self.platformController.getPlatforms(room)
         for i in range(0,len(platforms),1):
             item = PlatformView(platforms[i].id,platforms[i].x,platforms[i].y,float(platforms[i].width)*multiplier,float(platforms[i].length)*multiplier,platforms[i].orientation,self.platformController,room)
+            self.scene.addItem(item)     
+
+    def drawStructures(self,room,multiplier):
+        structures = self.structureController.getStructures(room)
+        for i in range(0,len(structures),1):
+            item = StructureView(structures[i].id,structures[i].x,structures[i].y,float(structures[i].width)*multiplier,float(structures[i].length)*multiplier,structures[i].orientation,self.structureController,room)
             self.scene.addItem(item)     
 
     def drawHorizontalMeasurements(self,room,multiplier):
@@ -403,7 +414,7 @@ class Viewport(QGraphicsView):
 class DrawerView(QWidget):
     keyPressed = pyqtSignal()
 
-    def __init__(self,store,tableController,tableLineController,doorController,unusableSpaceController,zoneController,platformController):
+    def __init__(self,store,tableController,tableLineController,doorController,unusableSpaceController,zoneController,platformController,structureController):
         super().__init__()
         self.views = []
         tab = QTabWidget(self)
@@ -414,7 +425,7 @@ class DrawerView(QWidget):
         for i in range(0,len(rooms),1):
             room_page = QWidget(self)
             room = rooms[i]
-            self.view = Viewport(self,store,tableController,tableLineController,doorController,room,unusableSpaceController,zoneController,platformController)
+            self.view = Viewport(self,store,tableController,tableLineController,doorController,room,unusableSpaceController,zoneController,platformController,structureController)
             self.views.append(self.view)
             gridLayout = QGridLayout()
             gridLayout.addWidget(self.view, 0, 0, 1, 1)

@@ -15,6 +15,7 @@ from infrastructure.entities.tableLineEntity import TableLineEntity
 from infrastructure.entities.zoneEntity import ZoneEntity 
 from infrastructure.entities.unusableSpaceEntity import UnusableSpaceEntity 
 from infrastructure.entities.platformEntity import PlatformEntity 
+from infrastructure.entities.structureEntity import StructureEntity 
 
 
 from model.objects.table import Table
@@ -27,6 +28,7 @@ from model.objects.tableLine import TableLine
 from model.objects.zone import Zone
 from model.objects.unusableSpace import UnusableSpace
 from model.objects.platform import Platform
+from model.objects.structure import Structure
 
 
 from infrastructure.entities.base import Base
@@ -53,6 +55,8 @@ class ProjectRepository:
     zoneEntities = self.session.query(ZoneEntity).filter_by(project_id=project.id).join(RoomEntity).all()
     unusableSpaceEntities = self.session.query(UnusableSpaceEntity).filter_by(project_id=project.id).join(RoomEntity).all()
     platformEntities = self.session.query(PlatformEntity).filter_by(project_id=project.id).join(RoomEntity).all()
+    structureEntities = self.session.query(StructureEntity).filter_by(project_id=project.id).join(RoomEntity).all()
+
     exponents = []
     for exponentEntity in projectEntity.exponents:
       exponentDate = exponentEntity.date[:10]
@@ -61,12 +65,12 @@ class ProjectRepository:
     tableGroups = []
     for tableGroupEntity in projectEntity.tableGroups:
       tableGroups.append(TableGroup(tableGroupEntity.id,tableGroupEntity.width,tableGroupEntity.length,tableGroupEntity.color,tableGroupEntity.maxQuantity,tableGroupEntity.tableType))
-    rooms = self.getRooms(projectEntity,doorEntities,tableEntities,tableLineEntities,zoneEntities,unusableSpaceEntities,platformEntities)
+    rooms = self.getRooms(projectEntity,doorEntities,tableEntities,tableLineEntities,zoneEntities,unusableSpaceEntities,platformEntities,structureEntities)
     completeProject = Project(projectEntities[0].id,projectEntities[0].name,rooms,tableGroups,exponents)
     return completeProject
   
   
-  def getRooms(self,projectEntity,doorEntities,tableEntities,tableLineEntities,zoneEntities,unusableSpaceEntities,platformEntities):
+  def getRooms(self,projectEntity,doorEntities,tableEntities,tableLineEntities,zoneEntities,unusableSpaceEntities,platformEntities,structureEntities):
     rooms = []
     for roomEntity in projectEntity.rooms:
       doors = []
@@ -103,6 +107,16 @@ class ProjectRepository:
                                             platformEntity.y,platformEntity.reelX,platformEntity.reelY,
                                             platformEntity.orientation,platformEntity.width,platformEntity.length)
         platforms.append(platform)
+      #Structures
+      structures = []   
+      roomStructureEntities = [x for x in structureEntities if x.room_id == roomEntity.id]
+      for structureEntity in roomStructureEntities:
+        roomEntity = structureEntity.room
+        room = Room(roomEntity.id,roomEntity.name,roomEntity.width,roomEntity.length,roomEntity.x,roomEntity.y)
+        structure = Structure(structureEntity.id,structureEntity.name,room,structureEntity.x,
+                                            structureEntity.y,structureEntity.reelX,structureEntity.reelY,
+                                            structureEntity.orientation,structureEntity.width,structureEntity.length)
+        structures.append(structure)
       #Tables
       tables = self.getTables(tableEntities,roomEntity)
       tableLines = []
@@ -112,7 +126,7 @@ class ProjectRepository:
         room = Room(roomEntity.id,roomEntity.name,roomEntity.width,roomEntity.length,roomEntity.x,roomEntity.y)
         tableLine = TableLine(tableLineEntity.id,tableLineEntity.name,room,tableLineEntity.x,tableLineEntity.y,tableLineEntity.reelX,tableLineEntity.reelY,tableLineEntity.orientation,tableLineEntity.width,tableLineEntity.tableSide,[])
         tableLines.append(tableLine)
-      rooms.append(Room(roomEntity.id,roomEntity.name,roomEntity.width,roomEntity.length,roomEntity.x,roomEntity.y,tables,doors,tableLines,zones,unusableSpaces,platforms))
+      rooms.append(Room(roomEntity.id,roomEntity.name,roomEntity.width,roomEntity.length,roomEntity.x,roomEntity.y,tables,doors,tableLines,zones,unusableSpaces,platforms,structures))
     return rooms
   
   def getTables(self,tableEntities,roomEntity):

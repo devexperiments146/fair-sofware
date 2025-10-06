@@ -16,6 +16,7 @@ class AppStore:
     self.displayMeasurements = False
     self.displayExponent = None
     self.displayPlatforms = True
+    self.displayStructures = True
     self.rooms = []
 
   def setProjects(self,projects):
@@ -107,6 +108,12 @@ class AppStore:
   
   def setDisplayPlatforms(self,displayPlatforms):
     self.displayPlatforms = displayPlatforms
+ 
+  def getDisplayStructures(self):
+    return self.displayStructures
+   
+  def setDisplayStructures(self,displayStructures):
+    self.displayStructures = displayStructures
 
   def setRooms(self,rooms):
     self.rooms = rooms
