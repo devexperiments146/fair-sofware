@@ -6,6 +6,7 @@ class AppStore:
     self.tableTypes = ['Petite table','Grande table']
     self.colors = ['green','purple','orange','black','yellow','black','red']
     self.sides = ['right','left']
+    self.structureTypes = ['Rectangle','Rond']
     self.selectedProject = None
     self.multiplier = 40
     self.displayTableLines = True
@@ -17,6 +18,7 @@ class AppStore:
     self.displayExponent = None
     self.displayPlatforms = True
     self.displayStructures = True
+    self.displayScale = True
     self.rooms = []
 
   def setProjects(self,projects):
@@ -39,6 +41,9 @@ class AppStore:
   
   def getOrientations(self):
     return self.orientations
+  
+  def getStructureTypes(self):
+    return self.structureTypes
   
   def getTableTypes(self):
     return self.tableTypes
@@ -121,3 +126,8 @@ class AppStore:
   def getRooms(self):
     return self.rooms
   
+  def getDisplayScale(self):
+    return self.displayScale
+  
+  def setDisplayScale(self,displayScale):
+    self.displayScale = displayScale

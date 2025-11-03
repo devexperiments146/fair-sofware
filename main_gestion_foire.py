@@ -50,6 +50,7 @@ from view.platform.createPlatformView import CreatePlatformView
 
 from view.structure.displayStructureView import DisplayStructureView
 from view.structure.createStructureView import CreateStructureView
+from view.structure.updateStructureView import UpdateStructureView
 
 
 from view.drawer.drawerView import DrawerView
@@ -310,6 +311,12 @@ class MainWindow(QMainWindow, ):
         button_action6.setCheckable(True)
         button_action6.setChecked(False)
 
+        
+        button_action6 = QAction(QIcon("bug.png"), "Echelle", self)
+        button_action6.triggered.connect(self.displayScale)
+        button_action6.setCheckable(True)
+        button_action6.setChecked(True)
+
         display_menu.addAction(button_action)
         display_menu.addAction(button_action2)
         display_menu.addAction(button_action3)
@@ -548,6 +555,11 @@ class MainWindow(QMainWindow, ):
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.setCentralWidget(widget)
 
+    def displayScale(self,s):
+        self.store.displayScale(s)
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
+        self.setCentralWidget(widget)
+
     def displayPlatforms(self, s):
         widget = DisplayPlatformView(self.store,self.appController,self.platformController)
         self.setCentralWidget(widget)           
@@ -558,7 +570,11 @@ class MainWindow(QMainWindow, ):
 
     def displayStructures(self, s):
         widget = DisplayStructureView(self.store,self.appController,self.structureController)
-        self.setCentralWidget(widget)           
+        self.setCentralWidget(widget)      
+
+    def displayUpdateStructure(self, structure):
+        widget = UpdateStructureView(self.store,structure,self.appController,self.structureController)
+        self.setCentralWidget(widget)     
 
     def displayCreateStructure(self, s):
         widget = CreateStructureView(self.store,self.appController,self.structureController)

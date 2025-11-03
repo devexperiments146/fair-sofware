@@ -1,5 +1,5 @@
 class Structure:
-  def __init__(self, id, name, room,x,y,reelX,reelY,orientation,width,length):
+  def __init__(self, id, name, room,x,y,reelX,reelY,orientation,width,length,structureType):
     self.id = id
     self.name = name
     self.room = room
@@ -10,6 +10,7 @@ class Structure:
     self.orientation = orientation
     self.width = width
     self.length = length
+    self.structureType = structureType
 
   def getName(self):
     return self.name

@@ -33,12 +33,13 @@ class StructureEntity(Base):
     reelX : Mapped[float]
     reelY : Mapped[float]
     width : Mapped[float]
+    structure_type: Mapped[int]
     length: Mapped[float]
     orientation: Mapped[str] = mapped_column(String(30))
     room_id: Mapped[int] = mapped_column(ForeignKey("room.id"))
     room: Mapped[RoomEntity] = relationship(lazy="joined")
 
-    def __init__(self,project_id,id,name, x, y,width,length,reelX,reelY,orientation,room_id):
+    def __init__(self,project_id,id,name, x, y,width,length,reelX,reelY,orientation,room_id,structureType):
         self.project_id = project_id
         self.id = id
         self.name = name
@@ -50,6 +51,7 @@ class StructureEntity(Base):
         self.reelY = reelY
         self.orientation = orientation
         self.room_id = room_id
+        self.structure_type = structureType
 
     def __repr__(self):
         return "Table(%r)" % (self.name)

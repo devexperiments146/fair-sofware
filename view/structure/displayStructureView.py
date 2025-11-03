@@ -52,6 +52,8 @@ class DisplayStructureView(QWidget):
         layout.addWidget(bouton)
         
         self.setLayout(layout)
+        
+        project.doubleClicked.connect(self.updateStructure)
 
     def close(self):
         self.appController.goBack()
@@ -64,6 +66,12 @@ class DisplayStructureView(QWidget):
         else : 
             self.deleteButton.setEnabled(False)
             self.selectedStructure = None
+
+    def updateStructure(self, mi):
+        if mi :
+            self.selectedStructure = self.structures[mi.row()]
+            self.structureController.displayUpdateStructure(self.selectedStructure)
+
 
     def delete(self):
         if self.selectedStructure:

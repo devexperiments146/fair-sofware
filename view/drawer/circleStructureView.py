@@ -9,7 +9,7 @@ from PyQt6.QtCore import *
 from PyQt6.QtCore import  Qt
 
 
-class StructureView(QGraphicsRectItem):
+class CircleStructureView(QGraphicsEllipseItem):
     
     def __init__(self,id, x,y,width,length,orientation,structureController,room):
         self.id = id

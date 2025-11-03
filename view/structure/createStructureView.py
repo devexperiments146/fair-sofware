@@ -47,6 +47,14 @@ class CreateStructureView(QWidget):
         self.selectedOrientation="Vertical"
         layout.addRow("Orientation:", self.orientation )
 
+
+        
+        self.structureType = QComboBox()
+        self.structureType.addItems(store.getStructureTypes())
+        self.structureType.activated.connect(self.check_index_structure_type)
+        self.selectedStructureType=0
+        layout.addRow("Type de structure:", self.structureType )
+
         cancelButton = QPushButton("Annuler")
         cancelButton.clicked.connect(self.close)
         validButton = QPushButton("Valider")
@@ -60,8 +68,11 @@ class CreateStructureView(QWidget):
     def check_index_rooms(self, index):
         self.selectedRoom = self.rooms[index]
 
+    def check_index_structure_type(self, index):
+        self.selectedStructureType = index
+
     def validStructure(self):
-        self.structureController.addStructure(self.selectedRoom,self.name.text(),self.lineLength.text(),self.lineWidth.text(),self.selectedOrientation)
+        self.structureController.addStructure(self.selectedRoom,self.name.text(),self.lineLength.text(),self.lineWidth.text(),self.selectedOrientation,self.selectedStructureType)
 
     def close(self):
         self.appController.goBack()

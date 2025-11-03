@@ -15,6 +15,9 @@ from view.drawer.zoneView import ZoneView
 from view.drawer.unusableSpaceView import UnusableSpaceView 
 from view.drawer.platformView import PlatformView
 from view.drawer.structureView import StructureView
+from view.drawer.circleStructureView import CircleStructureView  
+from view.drawer.structureGroupView import StructureGroupView
+
 class Viewport(QGraphicsView):
 
 
@@ -60,21 +63,9 @@ class Viewport(QGraphicsView):
             self.drawHorizontalMeasurements(room,multiplier)
             self.drawVerticalMeasurements(room,multiplier)
 
-        # self.setTransformationAnchor(self.ViewportAnchor.AnchorUnderMouse)
-        # self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        # self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        # self.setResizeAnchor(self.ViewportAnchor.AnchorUnderMouse)
+        if store.getDisplayScale():
+            self.drawScale(room,multiplier)
 
-        #width = 2600
-        #height = 2600
-        # if  len(rooms) > 0:
-        #   room = rooms[0]
-        #   width = room.width*self.multiplicateur
-        #   height = room.length*self.multiplicateur
-
-        # self.setSceneRect(0, 0, width, height)
-        # self.setFixedSize( width, height)
-        #self.fitInView(scene.itemsBoundingRect(),Qt.AspectRatioMode.KeepAspectRatio)
         self.fitInView(self.scene.itemsBoundingRect())
 
         self.setScene(self.scene)
@@ -130,8 +121,27 @@ class Viewport(QGraphicsView):
     def drawStructures(self,room,multiplier):
         structures = self.structureController.getStructures(room)
         for i in range(0,len(structures),1):
-            item = StructureView(structures[i].id,structures[i].x,structures[i].y,float(structures[i].width)*multiplier,float(structures[i].length)*multiplier,structures[i].orientation,self.structureController,room)
-            self.scene.addItem(item)     
+            structureName = QGraphicsSimpleTextItem(structures[i].name)
+            font = QFont()
+            font.setPixelSize(18)
+            font.setBold(False)
+            structureName.setFont(font)
+            xText = structures[i].x+multiplier
+            yText = structures[i].y+structures[i].length*multiplier/2
+            if structures[i].orientation == "Horizontal" :
+                xText = structures[i].x+multiplier
+                yText = structures[i].y+structures[i].width*multiplier/2
+            structureName.setX(xText)
+            structureName.setY(yText)
+            if structures[i].structureType == 1 :
+                item = CircleStructureView(structures[i].id,structures[i].x,structures[i].y,float(structures[i].width)*multiplier,float(structures[i].length)*multiplier,structures[i].orientation,self.structureController,room) 
+            else:    
+                item = StructureView(structures[i].id,structures[i].x,structures[i].y,float(structures[i].width)*multiplier,float(structures[i].length)*multiplier,structures[i].orientation,self.structureController,room)
+            group = StructureGroupView(i,self.structureController,room)
+            group.addToGroup(item)
+            group.addToGroup(structureName)
+            
+            self.scene.addItem(group)     
 
     def drawHorizontalMeasurements(self,room,multiplier):
          pen = QPen()
@@ -191,6 +201,31 @@ class Viewport(QGraphicsView):
             line = QGraphicsLineItem(-50,y,-30,y) 
             line.setPen(pen)
             self.scene.addItem(line)  
+
+    def drawScale(self,room,multiplier):
+        pen = QPen()
+        pen.setWidth(1)
+         
+        line1 = QGraphicsLineItem(10,room.length*multiplier+20,10,room.length*multiplier+30)
+        line1.setPen(pen)
+        self.scene.addItem(line1)    
+    
+        line2 = QGraphicsLineItem(10,room.length*multiplier+25,10+multiplier,room.length*multiplier+25)
+        line2.setPen(pen)
+        self.scene.addItem(line2)    
+    
+        line3 = QGraphicsLineItem(10+multiplier,room.length*multiplier+20,10+multiplier,room.length*multiplier+30)
+        line3.setPen(pen)
+        self.scene.addItem(line3)    
+
+        textScale = QGraphicsSimpleTextItem('Scale: 1m')
+        font = QFont()
+        font.setPixelSize(12)
+        font.setBold(False)
+        textScale.setFont(font)
+        textScale.setY(room.length*multiplier+40)
+        textScale.setX(10)
+        self.scene.addItem(textScale)  
 
     def drawVerticalMeasurements(self,room,multiplier):
          pen = QPen()

@@ -17,7 +17,7 @@ class StructureRepository:
       newId=int(maxValue)+1
     else:
       newId=1
-    structureEntity = StructureEntity(project.id,newId,structure.name,structure.x,structure.y,structure.width,structure.length,structure.reelX,structure.reelY,structure.orientation,structure.room.id)
+    structureEntity = StructureEntity(project.id,newId,structure.name,structure.x,structure.y,structure.width,structure.length,structure.reelX,structure.reelY,structure.orientation,structure.room.id,structure.structureType)
     roomEntity = self.session.query(RoomEntity).filter_by(id=structure.room.id).one()
     structureEntity.room = roomEntity
     self.session.add(structureEntity)
@@ -25,7 +25,7 @@ class StructureRepository:
     return newId
 
   def updateStructure(self,structure):
-    self.session.query(StructureEntity).filter_by(id=structure.id).update({"x":structure.x,"y":structure.y,"reelX":structure.reelX,"reelY":structure.reelY})
+    self.session.query(StructureEntity).filter_by(id=structure.id).update({"x":structure.x,"y":structure.y,"reelX":structure.reelX,"reelY":structure.reelY,"structure_type":structure.structureType})
     self.session.commit()
   
   def deleteStructure(self,id):

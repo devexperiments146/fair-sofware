@@ -26,6 +26,7 @@ class DisplayDoorView(QWidget):
         layout.addWidget(self.deleteButton)
 
         rooms = store.getSelectedProject().rooms
+        self.doors = []
         for i in range(0,len(rooms),1):
             self.doors += rooms[i].doors
 

@@ -115,7 +115,7 @@ class ProjectRepository:
         room = Room(roomEntity.id,roomEntity.name,roomEntity.width,roomEntity.length,roomEntity.x,roomEntity.y)
         structure = Structure(structureEntity.id,structureEntity.name,room,structureEntity.x,
                                             structureEntity.y,structureEntity.reelX,structureEntity.reelY,
-                                            structureEntity.orientation,structureEntity.width,structureEntity.length)
+                                            structureEntity.orientation,structureEntity.width,structureEntity.length,structureEntity.structure_type)
         structures.append(structure)
       #Tables
       tables = self.getTables(tableEntities,roomEntity)

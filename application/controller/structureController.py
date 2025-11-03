@@ -36,8 +36,8 @@ class StructureController:
     self.store = store
     self.structureRepository = StructureRepository(session)
 
-  def addStructure(self,room,name,length,width,orientation):
-    structure = Structure(0,name,room,0,0,0,0,orientation,float(width.replace(",",".")),float(length.replace(",",".")))
+  def addStructure(self,room,name,length,width,orientation,structureType):
+    structure = Structure(0,name,room,0,0,0,0,orientation,float(width.replace(",",".")),float(length.replace(",",".")),structureType)
     id = self.structureRepository.addStructure(self.store.getSelectedProject(),structure)
     structure.id = id
     structures = self.getStructures(room)
@@ -48,7 +48,7 @@ class StructureController:
     rooms = [x for x in self.store.getSelectedProject().rooms if x.id ==room.id]
     return rooms[0].structures
   
-  def updateStructure(self,id,shiftX,shiftY,room):
+  def updatePositionStructure(self,id,shiftX,shiftY,room):
     structures =  [x for x in room.structures if x.id ==id]
     structure = structures[0]
     structure.x = structure.x + shiftX
@@ -64,3 +64,14 @@ class StructureController:
     rooms[0].structures.remove(structures[0])
     self.window.displayDrawer("controller")
 
+  def updateStructure(self,structure,reelX,reelY,structureType):
+    structure.reelX = float(reelX.replace(",","."))
+    structure.reelY = float(reelY.replace(",","."))
+    structure.x = structure.reelX*self.store.getMultiplier()  
+    structure.y = structure.reelY *self.store.getMultiplier()  
+    structure.structureType = structureType
+    self.structureRepository.updateStructure(structure)
+    self.window.displayDrawer("controller")
+
+  def displayUpdateStructure(self,structure):
+    self.window.displayUpdateStructure(structure)
