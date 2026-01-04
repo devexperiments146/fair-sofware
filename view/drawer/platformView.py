@@ -17,6 +17,7 @@ class PlatformView(QGraphicsRectItem):
         super().__init__(x,y,width,length)
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         self.platformController = platformController
+        self._drag_start_scene_pos = None
         pen = QPen()
         pen.setWidth(1)
         pen.setColor(QColor('black'))
@@ -29,5 +30,11 @@ class PlatformView(QGraphicsRectItem):
 
     def mouseReleaseEvent(self, event):
         new_position = self.scenePos()
-        self.platformController.updatePlatform(self.id,new_position.x(),new_position.y(),self.room)
+        if self._drag_start_scene_pos is not None:
+            self.platformController.updatePlatform(self.id, new_position.x(), new_position.y(),  self.room)
+        self._drag_start_scene_pos = None
         super().mouseReleaseEvent(event)
+
+    def mousePressEvent(self, event):
+        self._drag_start_scene_pos = self.scenePos()
+        super().mousePressEvent(event)
