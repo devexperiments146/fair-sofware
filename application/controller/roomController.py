@@ -51,8 +51,6 @@ class RoomController:
  
   def loadRooms(self):
     rooms = self.roomRepository.loadRooms()
-    print("Salles chargées")
-    print(str(len(rooms)))
     self.store.setRooms(rooms)
 
   def deleteRoom(self,id):

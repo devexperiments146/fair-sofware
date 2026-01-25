@@ -368,65 +368,75 @@ class MainWindow(QMainWindow, ):
         actions =  self.exponent_menu.actions()     
         for action in actions:
             action.setEnabled(displayRoomsAndExponents)
+    
+    def show_view(self, widget):
+        # Replace central widget cleanly: delete previous widget to free resources
+        old = self.centralWidget()
+        if old is not None:
+            try:
+                old.deleteLater()
+            except Exception:
+                pass
+        self.setCentralWidget(widget)
       
     def onMyToolBarButtonClick(self, s):
         print("click", s)
  
     def displayCreateRoom(self):  
         widget = CreateRoomView(self.appController,self.roomController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayDrawer(self, s):  
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayRooms(self, s):
         widget = DisplayRoomView(self.store,self.appController,self.roomController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayImportRoom(self,s):
         widget = ImportRoomView(self.store,self.appController,self.roomController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayCreateDoor(self, s):
         widget = CreateDoorView(self.store,self.appController,self.doorController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayDoors(self, s):
         widget = DisplayDoorView(self.store,self.appController,self.doorController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayCreateZones(self, s):
         widget = CreateZoneView(self.store,self.appController,self.zoneController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayZones(self, s):
         widget = DisplayZoneView(self.store,self.appController,self.zoneController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayCreateUnusableSpaces(self, s):
         widget = CreateUnusableSpaceView(self.store,self.appController,self.unusableSpaceController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayUnusableSpaces(self, s):
         widget = DisplayUnusableSpaceView(self.store,self.appController,self.unusableSpaceController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayCreateTableGroup(self, s):
         widget = CreateTableGroupView(self.store,self.appController,self.tableGroupController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
   
     def displayTableGroups(self, s):
         widget = DisplayTableGroupView(self.store,self.appController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
   
     def displayCreateTable(self, s):
         widget = CreateTableView(self.store,self.appController,self.tableController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayTables(self, s):
         widget = DisplayTableView(self.store,self.appController,self.tableController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayExponents(self, s):
         widget = DisplayExponentView(self.store,self.appController,self.exponentController)
@@ -434,48 +444,48 @@ class MainWindow(QMainWindow, ):
 
     def displayCreateExponent(self, s):
         widget = CreateExponentView(self.store,self.appController,self.exponentController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayImportExponents(self, s):
         widget = ImportFileView(self.appController,self.exponentController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
   
     def displayUpdateExponent(self, exponent):
         widget = UpdateExponentView(self.store,exponent,self.appController,self.exponentController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayUpdateTableView(self, table):
         widget = UpdateTableView(self.store,table,self.appController,self.tableController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayExportExponents(self, s):
         label = QLabel("Export exponents")
-        self.setCentralWidget(label)     
+        self.show_view(label)    
 
     def displayExportPdfExponent(self):
         widget = PrintForExponentView(self.store,self.appController,self.exponentController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
 
     def displayAbout(self, s):
         label = QLabel("About")
-        self.setCentralWidget(label)     
+        self.show_view(label)    
 
     def displayCreateProject(self, s):
         widget = CreateProjectView(self.store,self.appController,self.projectController,self.parameterController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayProjects(self, s):
         widget = DisplayProjectView(self.store,self.appController,self.projectController,self.parameterController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayImportProject(self, s):
         widget = ImportProjectView(self.appController,self.projectController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayExportProject(self, s):
         widget = ExportProjectView(self.store,self.appController,self.projectController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayPDF(self,s):
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
@@ -490,95 +500,95 @@ class MainWindow(QMainWindow, ):
 
     def displayCreateTableLine(self, s):
         widget = CreateTableLineView(self.store,self.appController,self.tableLineController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayTableLines(self, s):
         widget = DisplayTableLineView(self.store,self.appController,self.tableLineController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
         
     def displayFillTableLines(self, s):
         widget = FillTableLinesView(self.store,self.appController,self.tableController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
          
     def displayFillTableLinesWithoutExponents(self, s):
         widget = FillTableLinesWithoutExponentsView(self.store,self.appController,self.tableController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
  
     def exportTables(self,s):
         self.tableController.exportTables(self.store)
     
     def displayUpdateTableLine(self, tableLine):
         widget = UpdateTableLineView(tableLine,self.appController,self.tableLineController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
  
     def displayUpdateZone(self, zone):
         widget = UpdateZoneView(zone,self.appController,self.zoneController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayDrawerTables(self,s):
         self.store.setDisplayTables(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayDrawerTableLines(self,s):
         self.store.setDisplayTableLines(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayDrawerDoors(self,s):
         self.store.setDisplayDoors(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayDrawerZones(self,s):
         self.store.setDisplayZones(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayDrawerUnusableSpaces(self,s):
         self.store.setDisplayUnusableSpaces(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
     
     def displayDrawerPlatforms(self,s):
         self.store.setDisplayPlatforms(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayDrawerStructures(self,s):
         self.store.setDisplayStructures(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayMeasurements(self,s):
         self.store.setDisplayMeasurements(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayScale(self,s):
         self.store.displayScale(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayPlatforms(self, s):
         widget = DisplayPlatformView(self.store,self.appController,self.platformController)
-        self.setCentralWidget(widget)           
+        self.show_view(widget)           
 
     def displayCreatePlatform(self, s):
         widget = CreatePlatformView(self.store,self.appController,self.platformController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
     def displayStructures(self, s):
         widget = DisplayStructureView(self.store,self.appController,self.structureController)
-        self.setCentralWidget(widget)      
+        self.show_view(widget)     
 
     def displayUpdateStructure(self, structure):
         widget = UpdateStructureView(self.store,structure,self.appController,self.structureController)
-        self.setCentralWidget(widget)     
+        self.show_view(widget)  
 
     def displayCreateStructure(self, s):
         widget = CreateStructureView(self.store,self.appController,self.structureController)
-        self.setCentralWidget(widget)
+        self.show_view(widget)
 
 
 app = QApplication(sys.argv)

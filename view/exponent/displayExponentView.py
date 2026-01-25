@@ -31,7 +31,10 @@ class DisplayExponentView(QWidget):
             currentExponent = self.exponents[i]
             date = ""
             if currentExponent.date:
-                date = currentExponent.date.strftime('%d/%m/%Y')
+                if isinstance(currentExponent.date, str):
+                    date = currentExponent.date
+                else:
+                    date = currentExponent.date.strftime('%d/%m/%Y')
             tableType = ""
             if currentExponent.tableType:
                 tableType = currentExponent.tableType

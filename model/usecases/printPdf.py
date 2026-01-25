@@ -31,7 +31,8 @@ class PrintPdf:
       
       painter.begin(printer)
       views[0].scene.render(painter)
-      printer.newPage()
-      printer.setPageSize(QPageSize(QPageSize.PageSizeId.A4))
-      views[1].scene.render(painter)
+      if len(views)>1:
+        printer.newPage()
+        printer.setPageSize(QPageSize(QPageSize.PageSizeId.A4))
+        views[1].scene.render(painter)
       painter.end()
