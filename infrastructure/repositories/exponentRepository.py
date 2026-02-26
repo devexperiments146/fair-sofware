@@ -37,7 +37,11 @@ class ExponentRepository:
     self.session.add(exponentEntity)
     self.session.commit()
     return exponentEntity.id
-  
+
+  def deleteExponent(self,exponentId):  
+    self.session.query(ExponentEntity).filter_by(id=exponentId).delete()
+    self.session.commit()
+
   def deleteAllExponents(self):  
     self.session.query(ExponentEntity).delete()
     self.session.commit()

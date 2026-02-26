@@ -1,4 +1,5 @@
 from model.objects.exponentGroup import ExponentGroup
+from datetime import datetime
 
 class RegroupExponentsUsecase:
 
@@ -14,7 +15,18 @@ class RegroupExponentsUsecase:
         for room in self.store.getSelectedProject().rooms:
             for tableLine in room.tableLines:
                 tables = tables + tableLine.tables
-        sortedByDateExponents  = sorted(self.store.getSelectedProject().exponents, key=lambda x: x.date)
+        
+        def parse_date(date_value):
+            if date_value is None:
+                return datetime.min
+            if isinstance(date_value, str):
+                try:
+                    return datetime.strptime(date_value, '%Y-%m-%d')
+                except:
+                    return datetime.min
+            return date_value
+        
+        sortedByDateExponents  = sorted(self.store.getSelectedProject().exponents, key=lambda x: parse_date(x.date))
 
         for exponent in sortedByDateExponents:
             alreadyAssigned = False

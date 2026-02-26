@@ -11,8 +11,19 @@ class TableLine:
     self.width = width
     self.tableSide = tableSide
     self.tables = tables
+    self.maxStart = 0
+    self.totalUsedWidth = 0
+    if self.orientation  == "Vertical":
+      self.maxStart =  self.y
+    else :
+      self.maxStart = self.x
 
+  def addTable(self,table,multiplier):    
+    self.tables.append(table)
+    self.totalUsedWidth = self.totalUsedWidth +table.tableGroup.length*multiplier
 
+  def addGap(self,gap,multiplier):    
+    self.totalUsedWidth = self.totalUsedWidth + gap*multiplier
 
   def canAddNewTableWithoutExponent(self,tableGroup,multiplier):    
     totalWidth = 0
@@ -40,46 +51,10 @@ class TableLine:
       return True
     return False
 
-  def canAddNewTable(self, exponentGroup,multiplier):
-    #Initialization
-    totalWidth = 0
-    sortedTables = []
-    maxWidth = 0
-    maxStart = 0
-    #if(exponentGroup.exponents[0].lastname.strip() == "Tifenn" or exponentGroup.exponents[0].lastname.strip() == "Tifenn" or exponentGroup.exponents[0].lastname.strip() == "Simon" or exponentGroup.exponents[0].lastname.strip() == "Simon"):
-    #  print("HEllo")
-    if len(self.tables) >0 :
-      #Initialization
-      if self.orientation  == "Vertical":
-        sortedTables = sorted(self.tables, key=lambda x: x.reelY,  reverse = True)
-        maxWidth = self.y+self.width*multiplier
-        maxStart = self.y
-      else :
-        sortedTables = sorted(self.tables, key=lambda x: x.reelX,  reverse = True)
-        maxWidth = self.x+self.width*multiplier
-        maxStart = self.x
-      for table in sortedTables:  
-        if self.orientation  == "Vertical":
-            if(maxWidth == table.y+table.tableGroup.length*multiplier):
-              maxWidth = maxWidth - table.tableGroup.length*multiplier
-            else:
-              newMaxStart = table.y+table.tableGroup.length*multiplier
-              if(newMaxStart>maxStart):
-                maxStart = newMaxStart
-        else:
-            if(maxWidth == table.x+table.tableGroup.length*multiplier):
-              maxWidth = maxWidth - table.tableGroup.length*multiplier
-            else:
-              newMaxStart = table.x+table.tableGroup.length*multiplier
-              if(newMaxStart>maxStart):
-                maxStart = newMaxStart
-      totalWidth = maxWidth-maxStart
-    else:
-      totalWidth = self.width*multiplier
-    newTableLineWidth = totalWidth-(exponentGroup.width*multiplier+0.5*multiplier)
-    if newTableLineWidth >= 0:
-      return True
-    return False
+  def canAddNewTable(self, exponentGroup, multiplier):
+    totalAvailableWidth = self.width * multiplier - self.totalUsedWidth
+    requiredWidth = exponentGroup.width * multiplier + 0.5 * multiplier
+    return totalAvailableWidth >= requiredWidth
   
   def getStartOfExponentGroup(self,exponentGroup,multiplier,gap):
     if(exponentGroup.tableLinePosition == 100):
@@ -89,13 +64,16 @@ class TableLine:
         start = self.x+self.width*multiplier-exponentGroup.width*multiplier
     else:
       if(len(self.tables)>0):
-        maxStart = self.getMaxStart(multiplier)
-        start = maxStart+gap*multiplier 
+        start = self.maxStart+gap*multiplier
+        if self.orientation  == "Vertical" :
+          if self.maxStart ==  self.y :
+            start = self.maxStart
+        else :
+          if self.maxStart ==  self.x :
+            start = self.maxStart
       else:
-        if self.orientation  == "Vertical":
-            start = self.y
-        else:
-            start = self.x
+        start = self.maxStart
+      self.maxStart = start+exponentGroup.width*multiplier
     return start
  
   def getMaxStart(self,multiplier):

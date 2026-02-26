@@ -38,26 +38,30 @@ class ShareExponentsUsecase:
               for exponent in exponentGroup.exponents :
                 tableGroup = self.getTableGroup(exponent)
                 table = self.getTable(tableLine,tableGroup,exponent,self.store.getMultiplier(),gap,self.room.zones)
-                tableLine.tables.append(table)
+                if table is None:
+                  continue
+                tableLine.addTable(table,self.store.getMultiplier())
                 gap = 0
+              tableLine.addGap(0.5,self.store.getMultiplier())
               addedExponentGroups.append(exponentName)
         else:
           #Debut de table
           endOfTableAdded = False
-          if tableLine.orientation == "Horizontal":
-            for exponentName in self.endTableExponentGroup:
-              if exponentName not in addedExponentGroups and not endOfTableAdded:
-                exponentGroup = self.exponentGroups.get(exponentName)
-                if tableLine.canAddNewTable(exponentGroup,self.store.getMultiplier()) and exponentGroup.tableLineChoiceId == None:
-                  gap = 0.5
-                  for exponent in exponentGroup.exponents :
-                    tableGroup = self.getTableGroup(exponent)
-                    table = self.getTable(tableLine,tableGroup,exponent,self.store.getMultiplier(),gap,self.room.zones)
-                    tableLine.tables.append(table)
-                    gap = 0
-                  addedExponentGroups.append(exponentName)
-                  endOfTableAdded = True
-       #Présent dans la ligne
+          for exponentName in self.endTableExponentGroup:
+            if exponentName not in addedExponentGroups and not endOfTableAdded:
+              exponentGroup = self.exponentGroups.get(exponentName)
+              if tableLine.canAddNewTable(exponentGroup,self.store.getMultiplier()) and exponentGroup.tableLineChoiceId == None:
+                gap = 0.5
+                for exponent in exponentGroup.exponents :
+                  tableGroup = self.getTableGroup(exponent)
+                  table = self.getTable(tableLine,tableGroup,exponent,self.store.getMultiplier(),gap,self.room.zones)
+                  if table is None:
+                    continue
+                  tableLine.addTable(table,self.store.getMultiplier())
+                  gap = 0
+                tableLine.addGap(0.5,self.store.getMultiplier())
+                addedExponentGroups.append(exponentName)
+                endOfTableAdded = True
         for exponentName in tableLineExponentGroup.exponentGroupNames:
           if exponentName not in addedExponentGroups:
             exponentGroup = self.exponentGroups.get(exponentName)
@@ -67,9 +71,12 @@ class ShareExponentsUsecase:
               for exponent in exponentGroup.exponents :
                 tableGroup = self.getTableGroup(exponent)
                 table = self.getTable(tableLine,tableGroup,exponent,self.store.getMultiplier(),gap,self.room.zones,startTable)
+                if table is None:
+                  continue
                 startTable = startTable + table.tableGroup.length*self.store.getMultiplier()
-                tableLine.tables.append(table)
+                tableLine.addTable(table,self.store.getMultiplier())
                 gap = 0
+              tableLine.addGap(0.5,self.store.getMultiplier())
               addedExponentGroups.append(exponentName)
       else:
         #Debut de table 
@@ -82,8 +89,11 @@ class ShareExponentsUsecase:
               for exponent in exponentGroup.exponents :
                 tableGroup = self.getTableGroup(exponent)
                 table = self.getTable(tableLine,tableGroup,exponent,self.store.getMultiplier(),gap,self.room.zones)
-                tableLine.tables.append(table)
+                if table is None:
+                  continue
+                tableLine.addTable(table,self.store.getMultiplier())
                 gap = 0
+              tableLine.addGap(0.5,self.store.getMultiplier())  
               addedExponentGroups.append(exponentName)
               endOfTableAdded = True
 
@@ -98,8 +108,11 @@ class ShareExponentsUsecase:
                   for exponent in exponentGroup.exponents :
                     tableGroup = self.getTableGroup(exponent)
                     table = self.getTable(tableLine,tableGroup,exponent,self.store.getMultiplier(),gap,self.room.zones)
-                    tableLine.tables.append(table)
+                    if table is None:
+                      continue
+                    tableLine.addTable(table,self.store.getMultiplier())
                     gap = 0
+                  tableLine.addGap(0.5,self.store.getMultiplier())
                   addedExponentGroups.append(exponentName)  
       for exponentName in self.exponentGroups:
         if exponentName not in addedExponentGroups and exponentName not in self.endTableExponentGroup:
@@ -110,12 +123,17 @@ class ShareExponentsUsecase:
               for exponent in exponentGroup.exponents :
                 tableGroup = self.getTableGroup(exponent)
                 table = self.getTable(tableLine,tableGroup,exponent,self.store.getMultiplier(),gap,self.room.zones)
-                tableLine.tables.append(table)
+                if table is None:
+                  continue
+                tableLine.addTable(table,self.store.getMultiplier())
                 gap = 0
+              tableLine.addGap(0.5,self.store.getMultiplier())
               addedExponentGroups.append(exponentName) 
     return self.room.tableLines
   
   def getTable(self, tableLine,tableGroup,exponent,multiplier,gap,zones,startTable=None):
+    if tableGroup is None:
+      return None
     newY = 0
     if startTable:
       if tableLine.orientation  == "Vertical":
@@ -169,6 +187,8 @@ class ShareExponentsUsecase:
       self.tableGroupCounters[tableGroup.id] = 0
     for room in self.store.getSelectedProject().rooms:
       for table in room.tables :
+          if not table.tableGroup:
+            continue
           counter = self.tableGroupCounters.get(table.tableGroup.id)
           counter += 1
           self.tableGroupCounters[table.tableGroup.id] = counter

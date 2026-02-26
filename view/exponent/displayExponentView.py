@@ -19,10 +19,15 @@ class DisplayExponentView(QWidget):
         layout.addWidget(label)
         self.exponents = self.store.getSelectedProject().exponents
 
-
-        self.deleteButton =  QPushButton("Tout supprimer")
-        self.deleteButton.clicked.connect(self.deleteAll)
+        self.selectedExponent = None
+        self.deleteButton =  QPushButton("Supprimer")
+        self.deleteButton.clicked.connect(self.delete)
+        self.deleteButton.setEnabled(False)
         layout.addWidget(self.deleteButton)
+
+        self.deleteAllButton =  QPushButton("Tout supprimer")
+        self.deleteAllButton.clicked.connect(self.deleteAll)
+        layout.addWidget(self.deleteAllButton)
 
         table = QtWidgets.QTableView()
         rows = []
@@ -89,6 +94,7 @@ class DisplayExponentView(QWidget):
         table.resizeRowsToContents()
 
 
+        table.clicked.connect(self.select_exponent)
 
         self.search = QLineEdit()
         self.search.returnPressed.connect(self.searchExponent)
@@ -112,6 +118,17 @@ class DisplayExponentView(QWidget):
             selectedExponent = self.exponents[mi.row()]
             self.exponentController.displayUpdateExponent(selectedExponent)
 
-        
+    def select_exponent(self, mi):
+        if mi :
+            self.deleteButton.setEnabled(True)
+            self.selectedExponent = self.exponents[mi.row()]
+        else : 
+            self.deleteButton.setEnabled(False)
+            self.selectedExponent = None
+
+    def delete(self):
+        if self.selectedExponent:
+            self.exponentController.deleteExponent(self.selectedExponent.id)
+
     def close(self):
         self.appController.goBack()

@@ -51,10 +51,10 @@ class TableController:
     self.getTables(room).append(table)       
     self.window.displayDrawer("controller")
     
-  def updatePositionTable(self,index,shiftX,shiftY,room):
+  def updatePositionTable(self,index,x,y,room):
     table = room.tables[index]
-    table.x = table.x + shiftX
-    table.y = table.y + shiftY
+    table.x = table.x + x
+    table.y = table.y + y
     table.reelX = table.x/self.store.getMultiplier()
     table.reelY = table.y /self.store.getMultiplier()
     self.tableRepository.updateTable(table)
@@ -124,11 +124,13 @@ class TableController:
     rooms[0].tables = tables
     self.window.displayDrawer("controller")
 
-  def updateTable(self,table,reelX,reelY,name = None,side = None):
+  def updateTable(self,table,reelX,reelY,name = None,side = None,orientation = None):
     table.reelX = float(reelX.replace(",","."))
     table.reelY = float(reelY.replace(",","."))
     table.x = table.reelX*self.store.getMultiplier()  
     table.y = table.reelY *self.store.getMultiplier()  
+    if(orientation != None):
+      table.orientation = orientation
     if(side != None):
       table.side = side
     if(name != None):
@@ -137,8 +139,8 @@ class TableController:
     self.window.displayDrawer("controller")
 
   def deleteAllTables(self):
-    self.tableRepository.deleteAllTables()
     for room in self.store.getSelectedProject().rooms:
+      self.tableRepository.deleteAllTablesOfRoom(room.id)
       for tableLine in room.tableLines:
           tableLine.tables = []
       room.tables = []

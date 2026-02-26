@@ -46,7 +46,7 @@ class TableRepository:
     return newId
 
   def updateTable(self,table):
-    self.session.query(TableEntity).filter_by(id=table.id).update({"x":table.x,"y":table.y,"reelX":table.reelX,"reelY":table.reelY,"name":table.name,"side":table.side})
+    self.session.query(TableEntity).filter_by(id=table.id).update({"x":table.x,"y":table.y,"reelX":table.reelX,"reelY":table.reelY,"name":table.name,"side":table.side,"orientation":table.orientation})
     self.session.commit()
 
   def updateExponentTable(self,table):

@@ -42,6 +42,7 @@ class ExponentController:
   def addExponent(self,firstName,lastName,tableType):
     exponent = Exponent(0,firstName,lastName)
     exponent.tableType = tableType
+    
     exponent.date = datetime.today().strftime('%d/%m/%Y %H:%M')
     id = self.exponentRepository.addExponent(exponent)  
     exponent.id = id
@@ -53,7 +54,11 @@ class ExponentController:
     self.store.getSelectedProject().exponents = []
     self.window.displayDrawer("controller")
                 
-
+  def deleteExponent(self,exponentId):
+    self.exponentRepository.deleteExponent(exponentId)  
+    self.store.getSelectedProject().exponents = [x for x in self.store.getSelectedProject().exponents if x.id != exponentId]
+    self.window.displayDrawer("controller")
+                
 
   def importExponents(self,filename):
     importedExponents = []

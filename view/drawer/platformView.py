@@ -27,14 +27,9 @@ class PlatformView(QGraphicsRectItem):
         brush.setStyle(Qt.BrushStyle.Dense6Pattern)
         self.setPen(pen)
         self.setBrush(brush)
-
+        
     def mouseReleaseEvent(self, event):
-        new_position = self.scenePos()
-        if self._drag_start_scene_pos is not None:
-            self.platformController.updatePlatform(self.id, new_position.x(), new_position.y(),  self.room)
-        self._drag_start_scene_pos = None
         super().mouseReleaseEvent(event)
-
-    def mousePressEvent(self, event):
-        self._drag_start_scene_pos = self.scenePos()
-        super().mousePressEvent(event)
+        new_position = self.scenePos()
+        self.platformController.updatePlatform(self.id, new_position.x(), new_position.y(),  self.room)
+  

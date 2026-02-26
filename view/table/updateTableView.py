@@ -39,6 +39,14 @@ class UpdateTableView(QWidget):
         self.selectedSide = self.sides[0]
         layout.addRow("Texte:", self.side )
 
+        comboboxOrientations = ['Vertical','Horizontal']
+        self.orientation = QComboBox()
+        self.orientation.addItems(comboboxOrientations)
+        self.orientation.activated.connect(self.check_index_orientation)
+        self.selectedOrientation=table.orientation
+        layout.addRow("Orientation:", self.orientation )
+
+
         cancelButton = QPushButton("Annuler")
         cancelButton.clicked.connect(self.close)
         validButton = QPushButton("Valider")
@@ -47,10 +55,13 @@ class UpdateTableView(QWidget):
         self.setLayout(layout)
         
     def validTable(self):
-        self.tableController.updateTable(self.currentTable,self.tableX.text(),self.tableY.text(),self.tableName.text(),self.selectedSide)
+        self.tableController.updateTable(self.currentTable,self.tableX.text(),self.tableY.text(),self.tableName.text(),self.selectedSide,self.selectedOrientation)
 
     def check_index_side(self, index):
         self.selectedSide = self.sides[index]
+
+    def check_index_orientation(self, index):
+        self.selectedOrientation=  "Vertical" if index == 0 else "Horizontal"
 
     def close(self):
         self.appController.goBack()
