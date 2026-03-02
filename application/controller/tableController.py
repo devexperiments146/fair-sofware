@@ -165,6 +165,8 @@ class TableController:
       path = "C:\\"
       filter = "*.csv"
       filename, _  = QFileDialog.getSaveFileName(qfd, "Exporter tables", path, filter)
+      if not filename:  # ← L'utilisateur a annulé ou fermé
+        return
       with open(filename, 'w') as f:
         tables  = []
         for room in store.getSelectedProject().rooms:

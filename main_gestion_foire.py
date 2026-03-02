@@ -315,10 +315,10 @@ class MainWindow(QMainWindow, ):
         button_action6.setChecked(False)
 
         
-        button_action6 = QAction(QIcon("bug.png"), "Echelle", self)
-        button_action6.triggered.connect(self.displayScale)
-        button_action6.setCheckable(True)
-        button_action6.setChecked(True)
+        button_action7 = QAction(QIcon("bug.png"), "Echelle", self)
+        button_action7.triggered.connect(self.displayScale)
+        button_action7.setCheckable(True)
+        button_action7.setChecked(True)
 
         display_menu.addAction(button_action)
         display_menu.addAction(button_action2)
@@ -326,6 +326,7 @@ class MainWindow(QMainWindow, ):
         display_menu.addAction(button_action4)
         display_menu.addAction(button_action5)
         display_menu.addAction(button_action6)
+        display_menu.addAction(button_action7)
 
         button_action = QAction(QIcon("bug.png"), "&Contenu", self)
         button_action.setStatusTip("")

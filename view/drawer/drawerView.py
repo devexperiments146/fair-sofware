@@ -354,7 +354,6 @@ class Viewport(QGraphicsView):
             else:
                 width = tables[i].tableGroup.length*multiplier
                 height = tables[i].tableGroup.width*multiplier
-  
 
             item = TableView(0, 0, width, height,i,tables[i].tableGroup.color,self.tableController)
 
