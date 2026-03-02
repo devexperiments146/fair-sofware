@@ -126,21 +126,22 @@ class Viewport(QGraphicsView):
             font.setPixelSize(18)
             font.setBold(False)
             structureName.setFont(font)
-            xText = structures[i].x+multiplier
-            yText = structures[i].y+structures[i].length*multiplier/2
+            xText = multiplier
+            yText = structures[i].length*multiplier/2
             if structures[i].orientation == "Horizontal" :
-                xText = structures[i].x+multiplier
-                yText = structures[i].y+structures[i].width*multiplier/2
+                xText = multiplier
+                yText = structures[i].width*multiplier/2
             structureName.setX(xText)
             structureName.setY(yText)
             if structures[i].structureType == 1 :
-                item = CircleStructureView(structures[i].id,structures[i].x,structures[i].y,float(structures[i].width)*multiplier,float(structures[i].length)*multiplier,structures[i].orientation,self.structureController,room) 
+                item = CircleStructureView(structures[i].id,0,0,float(structures[i].width)*multiplier,float(structures[i].length)*multiplier,structures[i].orientation,self.structureController,room) 
             else:    
-                item = StructureView(structures[i].id,structures[i].x,structures[i].y,float(structures[i].width)*multiplier,float(structures[i].length)*multiplier,structures[i].orientation,self.structureController,room)
+                item = StructureView(structures[i].id,0,0,float(structures[i].width)*multiplier,float(structures[i].length)*multiplier,structures[i].orientation,self.structureController,room)
             group = StructureGroupView(i,self.structureController,room)
             group.addToGroup(item)
             group.addToGroup(structureName)
             
+            group.setPos(structures[i].x,structures[i].y) 
             self.scene.addItem(group)     
 
     def drawHorizontalMeasurements(self,room,multiplier):
@@ -344,16 +345,18 @@ class Viewport(QGraphicsView):
     def drawTables(self,room,multiplier):
         tables = self.tableController.getTables(room)
         for i in range(0,len(tables),1):
+           
+            group = GroupView(i,self.tableController,room)
+
             if tables[i].orientation == "Vertical" :
                 width = tables[i].tableGroup.width*multiplier
                 height = tables[i].tableGroup.length*multiplier
             else:
                 width = tables[i].tableGroup.length*multiplier
                 height = tables[i].tableGroup.width*multiplier
-            new_x = tables[i].x
-            new_y = tables[i].y
+  
 
-            item = TableView(new_x, new_y, width, height,i,tables[i].tableGroup.color,self.tableController)
+            item = TableView(0, 0, width, height,i,tables[i].tableGroup.color,self.tableController)
 
             text = QGraphicsSimpleTextItem(tables[i].name)
             font = QFont()
@@ -366,23 +369,22 @@ class Viewport(QGraphicsView):
             text.setFont(font)
 
             if tables[i].orientation == "Vertical" :
-                text.setX((tables[i].x+tables[i].tableGroup.width*multiplier/2)-5)
-                text.setY((tables[i].y+tables[i].tableGroup.length*multiplier/2)-5)
+                text.setX((tables[i].tableGroup.width*multiplier/2)-5)
+                text.setY((tables[i].tableGroup.length*multiplier/2)-5)
             else:
-                text.setX((tables[i].x+tables[i].tableGroup.length*multiplier/2)-5)
-                text.setY((tables[i].y+tables[i].tableGroup.width*multiplier/2)-5)
-            self.scene.addItem(text) 
+                text.setX((tables[i].tableGroup.length*multiplier/2)-5)
+                text.setY((tables[i].tableGroup.width*multiplier/2)-5)
             
 
 
             if tables[i].exponent and tables[i].exponent.endOfTable:
-                bubble = QGraphicsEllipseItem(tables[i].x+1,tables[i].y+1,20,20)
+                bubble = QGraphicsEllipseItem(1,1,20,20)
                 brush = QBrush()
                 brush.setColor(QColor('white'))
                 brush.setStyle(Qt.BrushStyle.SolidPattern)
                 bubble.setBrush(brush)
-                img = self.scene.addPixmap(QPixmap("./hanger.png"))
-                img.setPos(tables[i].x+3,tables[i].y+3)
+                img = QGraphicsPixmapItem(QPixmap("./hanger.png"))
+                img.setPos(3,3)
 
 
             if tables[i].exponent and tables[i].exponent.nextWall:
@@ -390,16 +392,15 @@ class Viewport(QGraphicsView):
                     add = 20
                 else:
                     add = 0
-                bubble2 = QGraphicsEllipseItem(tables[i].x+1+add,tables[i].y+1,20,20)
+                bubble2 = QGraphicsEllipseItem(1+add,1,20,20)
                 brush = QBrush()
                 brush.setColor(QColor('white'))
                 brush.setStyle(Qt.BrushStyle.SolidPattern)
                 bubble2.setBrush(brush)
-                img2 = self.scene.addPixmap(QPixmap("./brickwall.png"))
-                img2.setPos(tables[i].x+3+add,tables[i].y+3)
+                img2 = QGraphicsPixmapItem(QPixmap("./brickwall.png"))
+                img2.setPos(3+add,3)
 
 
-            group = GroupView(i,self.tableController,room)
             group.addToGroup(item)
             group.addToGroup(text)
             if tables[i].exponent and tables[i].exponent.endOfTable:
@@ -421,26 +422,26 @@ class Viewport(QGraphicsView):
                 text2.setFont(font)
                 if tables[i].orientation == "Vertical" :
                     if(tables[i].side == "left"):
-                        text1.setX(new_x+tables[i].tableGroup.width*multiplier-40-multiplier)
-                        text2.setX(new_x+tables[i].tableGroup.width*multiplier-40-multiplier)
+                        text1.setX(tables[i].tableGroup.width*multiplier-40-multiplier)
+                        text2.setX(tables[i].tableGroup.width*multiplier-40-multiplier)
                     else:
-                        text1.setX(new_x+tables[i].tableGroup.width*multiplier+10)
-                        text2.setX(new_x+tables[i].tableGroup.width*multiplier+10)
-                    text1.setY(new_y)
-                    text2.setY(new_y+20)
+                        text1.setX(tables[i].tableGroup.width*multiplier+10)
+                        text2.setX(tables[i].tableGroup.width*multiplier+10)
+                    text1.setY(0)
+                    text2.setY(20)
                 else:
-                    text1.setX(new_x)
-                    text2.setX(new_x)
+                    text1.setX(0)
+                    text2.setX(0)
                     if(tables[i].side == "left"):
-                        text1.setY(new_y+tables[i].tableGroup.width*multiplier-10-multiplier)
-                        text2.setY(new_y+tables[i].tableGroup.width*multiplier-30-multiplier)
+                        text1.setY(tables[i].tableGroup.width*multiplier-10-multiplier)
+                        text2.setY(tables[i].tableGroup.width*multiplier-30-multiplier)
                     else:
-                        text1.setY(new_y+tables[i].tableGroup.width*multiplier+10)
-                        text2.setY(new_y+tables[i].tableGroup.width*multiplier+30)
+                        text1.setY(tables[i].tableGroup.width*multiplier+10)
+                        text2.setY(tables[i].tableGroup.width*multiplier+30)
                 group.addToGroup(text1)
                 group.addToGroup(text2)
+            group.setPos(tables[i].x, tables[i].y) 
             self.scene.addItem(group)
-            
 
     
     # def resizeEvent(self, event):

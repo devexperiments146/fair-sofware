@@ -1,29 +1,9 @@
-
-from model.objects.room import Room
-from model.objects.door import Door
-from model.objects.exponent import Exponent
-from model.objects.project import Project
-from model.objects.tableGroup import TableGroup
-from model.objects.table import Table
 from model.objects.zone import Zone
 
-from model.usecases.shareExponentsUsecase import ShareExponentsUsecase
 from model.usecases.createZonesUsecase import CreateZonesUsecase
-from model.usecases.printPdf import PrintPdf
-
-from infrastructure.repositories.doorRepository import DoorRepository
-from infrastructure.repositories.exponentRepository import ExponentRepository
-from infrastructure.repositories.projectRepository import ProjectRepository
-from infrastructure.repositories.roomRepository import RoomRepository
-from infrastructure.repositories.tableGroupRepository import TableGroupRepository
-from infrastructure.repositories.tableLineRepository import TableLineRepository
-from infrastructure.repositories.tableRepository import TableRepository
+from model.usecases.createZonesUsecase import CreateZonesUsecase
+from model.usecases.recalculateZoneTableNamesUsecase import RecalculateZoneTableNamesUsecase
 from infrastructure.repositories.zoneRepository import ZoneRepository
-
-from application.mapper.projectMapper import ProjectMapper
-
-import csv
-import json 
 
 class ZoneController:
   def __init__(self,window,store,session):
@@ -46,6 +26,13 @@ class ZoneController:
     rooms = [x for x in self.store.getSelectedProject().rooms if x.id ==room.id]
     return rooms[0].zones
   
+  def recalculateZoneTableNames(self):
+    rooms = self.store.getSelectedProject().rooms
+    for i in range(0,len(rooms),1):
+      room = rooms[i]
+      usecase = RecalculateZoneTableNamesUsecase(self.store,room)
+      usecase.execute()
+
   def deleteZone(self,id,room):
     self.zoneRepository.deleteZone(id)
     rooms = [x for x in self.store.getSelectedProject().rooms if x.id ==room.id]

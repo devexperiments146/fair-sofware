@@ -53,8 +53,8 @@ class TableController:
     
   def updatePositionTable(self,index,x,y,room):
     table = room.tables[index]
-    table.x = table.x + x
-    table.y = table.y + y
+    table.x = x
+    table.y = y
     table.reelX = table.x/self.store.getMultiplier()
     table.reelY = table.y /self.store.getMultiplier()
     self.tableRepository.updateTable(table)

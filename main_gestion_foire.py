@@ -176,12 +176,14 @@ class MainWindow(QMainWindow, ):
         button_action6= QAction(QIcon("bug.png"), "&Zones", self)
         button_action6.triggered.connect(self.displayZones)
 
+        button_action7= QAction(QIcon("bug.png"), "&Recalculer zones", self)
+        button_action7.triggered.connect(self.recalculateZones)
         
-        button_action7= QAction(QIcon("bug.png"), "&Créer espace inutilisables", self)
-        button_action7.triggered.connect(self.displayCreateUnusableSpaces)
+        button_action8= QAction(QIcon("bug.png"), "&Créer espace inutilisables", self)
+        button_action8.triggered.connect(self.displayCreateUnusableSpaces)
 
-        button_action8= QAction(QIcon("bug.png"), "&Espace inutilisables", self)
-        button_action8.triggered.connect(self.displayUnusableSpaces)
+        button_action9= QAction(QIcon("bug.png"), "&Espace inutilisables", self)
+        button_action9.triggered.connect(self.displayUnusableSpaces)
 
         self.room_menu.addAction(button_action)
         self.room_menu.addAction(button_action2)
@@ -192,9 +194,10 @@ class MainWindow(QMainWindow, ):
         self.room_menu.addSeparator()
         self.room_menu.addAction(button_action5)
         self.room_menu.addAction(button_action6)
-        self.room_menu.addSeparator()
         self.room_menu.addAction(button_action7)
+        self.room_menu.addSeparator()
         self.room_menu.addAction(button_action8)
+        self.room_menu.addAction(button_action9)
 
         button_action = QAction(QIcon("bug.png"), "&Créer groupe de tables", self)
         button_action.triggered.connect(self.displayCreateTableGroup)
@@ -545,6 +548,11 @@ class MainWindow(QMainWindow, ):
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.show_view(widget)
 
+    def recalculateZones(self,s):
+        self.zoneController.recalculateZoneTableNames()
+        widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
+        self.show_view(widget)
+
     def displayDrawerUnusableSpaces(self,s):
         self.store.setDisplayUnusableSpaces(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
@@ -566,7 +574,7 @@ class MainWindow(QMainWindow, ):
         self.show_view(widget)
 
     def displayScale(self,s):
-        self.store.displayScale(s)
+        self.store.setDisplayScale(s)
         widget = DrawerView(self.store,self.tableController,self.tableLineController,self.doorController,self.unusableSpaceController,self.zoneController,self.platformController,self.structureController)
         self.show_view(widget)
 

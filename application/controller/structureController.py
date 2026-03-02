@@ -48,11 +48,11 @@ class StructureController:
     rooms = [x for x in self.store.getSelectedProject().rooms if x.id ==room.id]
     return rooms[0].structures
   
-  def updatePositionStructure(self,id,shiftX,shiftY,room):
+  def updatePositionStructure(self,id,x,y,room):
     structures =  [x for x in room.structures if x.id ==id]
     structure = structures[0]
-    structure.x = structure.x + shiftX
-    structure.y = structure.y + shiftY
+    structure.x = x
+    structure.y = y
     structure.reelX = structure.x/self.store.getMultiplier()
     structure.reelY = structure.y /self.store.getMultiplier()
     self.structureRepository.updateStructure(structure)
